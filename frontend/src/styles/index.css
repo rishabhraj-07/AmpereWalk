@@ -1,4 +1,3 @@
-@import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
 
@@ -93,4 +92,70 @@ canvas.particle-bg {
 
 .preserve-3d {
   transform-style: preserve-3d;
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+
+  .aw-cursor-dot,
+  .aw-cursor-halo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+    contain: layout style paint;
+  }
+
+  .aw-cursor-dot.is-visible,
+  .aw-cursor-halo.is-visible {
+    opacity: 1;
+  }
+
+  .aw-cursor-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #8DC63F;
+    box-shadow: 0 0 16px rgba(141, 198, 63, 0.72);
+    transition: width 0.16s ease, height 0.16s ease, opacity 0.18s ease;
+  }
+
+  .aw-cursor-dot.is-interactive {
+    width: 6px;
+    height: 6px;
+  }
+
+  .aw-cursor-halo {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.14), transparent 60%);
+    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+  }
+
+  .aw-cursor-halo.is-interactive {
+    width: 56px;
+    height: 56px;
+    border-color: rgba(141, 198, 63, 0.72);
+  }
+}
+
+::selection {
+  color: #ffffff;
+  background: #4CAF50;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 80px rgba(13, 27, 75, 0.18);
+  backdrop-filter: blur(18px);
 }
