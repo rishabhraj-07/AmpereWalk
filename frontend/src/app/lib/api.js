@@ -15,7 +15,14 @@ async function apiRequest(path, options = {}) {
     config.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, config);
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, config);
+  } catch (error) {
+    throw new Error(`Unable to reach the server at ${API_BASE_URL}. Make sure the backend is running.`);
+  }
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
