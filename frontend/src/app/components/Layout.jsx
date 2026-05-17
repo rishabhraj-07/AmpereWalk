@@ -3,6 +3,7 @@ import { Menu, X, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import logo from "../../imports/image.png";
+import { useAuth } from "../context/AuthContext";
 function NavLink({ to, label, isActive }) {
   return <Link to={to} className="relative px-4 py-2 group">
       <span className={`relative z-10 text-sm font-medium transition-colors duration-200 ${isActive ? "text-aw-green" : "text-white/80 group-hover:text-white"}`}>
@@ -34,7 +35,7 @@ function Layout() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthed = window.localStorage.getItem("amperewalk:session") === "active";
+  const { isAuthenticated, isInitializing, logout } = useAuth();
   const { scrollY } = useScroll();
   const scrollProgressWidth = useTransform(scrollY, [0, 1e3], ["0%", "100%"]);
   useEffect(() => {
@@ -62,9 +63,11 @@ function Layout() {
     exit: { opacity: 0, y: -16, filter: "blur(4px)", transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }
   };
   const handleLogout = () => {
-    window.localStorage.removeItem("amperewalk:session");
-    navigate("/login", { replace: true });
+    logout().finally(() => {
+      navigate("/login", { replace: true });
+    });
   };
+  const isAuthed = isAuthenticated && !isInitializing;
   return <div className="min-h-screen flex flex-col">
 
       {

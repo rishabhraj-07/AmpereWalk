@@ -2,24 +2,42 @@ import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { AuthShell } from "../components/AuthShell";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isAuthed = window.localStorage.getItem("amperewalk:session") === "active";
+  const { isAuthenticated, isInitializing, login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (isAuthed) {
+  if (isInitializing) {
+    return <div className="min-h-screen bg-aw-light-gray grid place-items-center text-aw-navy">
+        <div className="text-sm font-semibold tracking-wide">Restoring session...</div>
+      </div>;
+  }
+
+  if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    window.localStorage.setItem("amperewalk:session", "active");
-    navigate(location.state?.from || "/dashboard", { replace: true });
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await login(formData);
+      navigate(location.state?.from || "/dashboard", { replace: true });
+    } catch (requestError) {
+      setError(requestError.message || "Unable to sign in");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return <AuthShell
@@ -30,6 +48,9 @@ function Login() {
         </p>}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {error ? <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div> : null}
         <div>
           <label className="mb-2 block text-sm font-semibold text-aw-navy">
             Email Address
@@ -76,9 +97,11 @@ function Login() {
 
         <button
     type="submit"
+    disabled={isSubmitting}
+    aria-busy={isSubmitting}
     className="group flex w-full items-center justify-center gap-2 rounded-lg bg-aw-green px-6 py-4 text-white transition-colors hover:bg-aw-lime"
   >
-          Sign In
+          {isSubmitting ? "Signing In..." : "Sign In"}
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </button>
       </form>

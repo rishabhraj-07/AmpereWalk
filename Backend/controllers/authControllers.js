@@ -9,13 +9,24 @@ const generateToken = (id) => {
   });
 };
 
+const setTokenCookie = (res, token) => {
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+  });
+};
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required", success: false });
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists", success: false });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -27,11 +38,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
     });
     const token = generateToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: true,
-      sameSite: "lax",
-    });
+    setTokenCookie(res, token);
 
     if (user) {
       res
@@ -42,10 +49,10 @@ const registerUser = async (req, res) => {
           user: { _id: user._id, name: user.name, email: user.email },
         });
     } else {
-      res.status(400).json({ message: "Invalid user data" });
+      res.status(400).json({ message: "Invalid user data", success: false });
     }
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    res.status(500).json({ message: "Server Error", success: false, error: error.message });
   }
 };
 
@@ -53,32 +60,36 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.json({ message: "All fields are required" });
+      return res.status(400).json({ message: "All fields are required", success: false });
     }
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ message: "Incorrect password or email" });
+      return res.status(401).json({ message: "Incorrect password or email", success: false });
     }
     const auth = await bcrypt.compare(password, user.password);
     if (!auth) {
-      return res.json({ message: "Incorrect password or email" });
+      return res.status(401).json({ message: "Incorrect password or email", success: false });
     }
     const token = generateToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: true,
-      sameSite: "lax",
-    });
+    setTokenCookie(res, token);
     res
-      .status(201)
+      .status(200)
       .json({
         message: "User logged in successfully",
         success: true,
         user: { _id: user._id, name: user.name, email: user.email },
       });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({ message: "Server Error", success: false, error: error.message });
   }
+};
+
+const logoutUser = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully", success: true });
 };
 
 const getUserProfile = async (req, res) => {
@@ -93,5 +104,6 @@ const getUserProfile = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
   getUserProfile,
 };

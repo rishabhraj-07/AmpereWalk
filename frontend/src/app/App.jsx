@@ -1,10 +1,13 @@
 import { RouterProvider } from "react-router";
 import { router } from "./routes";
 import { ExperienceLayer } from "./components/ExperienceLayer";
+import { AuthProvider } from "./context/AuthContext";
 function App() {
   return <>
     <ExperienceLayer />
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </>;
 }
 export {

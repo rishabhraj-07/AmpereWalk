@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate, useLocation } from "react-router";
 import { Layout } from "./components/Layout";
+import { useAuth } from "./context/AuthContext";
 
 const Home = lazy(() => import("./pages/Home").then((module) => ({ default: module.Home })));
 const About = lazy(() => import("./pages/About").then((module) => ({ default: module.About })));
@@ -23,9 +24,18 @@ function PageLoader({ children }) {
 
 function ProtectedRoute({ children }) {
   const location = useLocation();
-  const isAuthed = window.localStorage.getItem("amperewalk:session") === "active";
+  const { isAuthenticated, isInitializing } = useAuth();
 
-  if (!isAuthed) {
+  if (isInitializing) {
+    return <div className="min-h-[60vh] bg-aw-navy text-white grid place-items-center">
+        <div className="flex items-center gap-3 text-sm font-semibold tracking-widest uppercase">
+          <span className="h-2 w-2 rounded-full bg-aw-green animate-pulse" />
+          Loading session
+        </div>
+      </div>;
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
