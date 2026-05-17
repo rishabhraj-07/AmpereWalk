@@ -34,6 +34,14 @@ function ProtectedRoute({ children }) {
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <PageLoader><Login /></PageLoader>
+  },
+  {
+    path: "/signup",
+    element: <PageLoader><Signup /></PageLoader>
+  },
+  {
     path: "/",
     Component: Layout,
     children: [
@@ -43,8 +51,6 @@ const router = createBrowserRouter([
       { path: "blog", element: <PageLoader><Blog /></PageLoader> },
       { path: "contact", element: <PageLoader><Contact /></PageLoader> },
       { path: "careers", element: <PageLoader><Careers /></PageLoader> },
-      { path: "login", element: <PageLoader><Login /></PageLoader> },
-      { path: "signup", element: <PageLoader><Signup /></PageLoader> },
       {
         path: "dashboard",
         element: <ProtectedRoute><PageLoader><Dashboard /></PageLoader></ProtectedRoute>
