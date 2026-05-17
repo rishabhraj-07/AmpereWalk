@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { motion, useScroll, useTransform, useInView } from "motion/react";
 import { Zap, Footprints, Battery, Leaf, ArrowRight, Award, Users, TrendingUp } from "lucide-react";
-import img23_1 from "../../imports/img23-1.jpg";
+import heroShoeImage from "../../imports/Hero_shoe.png";
 import { useRef, useState, useEffect } from "react";
 import { useTilt, useParticles } from "../../hooks/useAnimations";
 function AnimatedCounter({ value, suffix = "" }) {
@@ -73,7 +73,7 @@ function Home() {
       <section ref={heroRef} className="relative bg-aw-navy text-white overflow-hidden min-h-[100vh] flex items-center">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-42"
-          style={{ backgroundImage: `url(${img23_1})` }}
+          style={{ backgroundImage: `url(${heroShoeImage})` }}
           aria-hidden="true"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-aw-navy via-aw-navy/70 to-aw-navy/42" aria-hidden="true" />
@@ -217,13 +217,23 @@ function Home() {
     style={{ scale: 1.2 }}
   />
 
-                <motion.img
-    src={img23_1}
+                {/* <motion.img
+    src={heroShoeImage}
     alt="AmpereWalk Smart Shoe"
-    className="relative w-full max-w-md lg:max-w-lg rounded-3xl object-contain drop-shadow-2xl"
+    className="relative w-full max-w-4xl lg:max-w-5xl rounded-3xl object-contain drop-shadow-2xl"
+    animate={{ y: [0, -12, 0] }}
+    className="relative w-full max-w-4xl lg:max-w-5xl rounded-3xl drop-shadow-2xl"
+    style={{ transform: "scale(1.5)" }}
+    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+  /> */}
+                <motion.img
+    src={heroShoeImage}
+    alt="AmpereWalk Smart Shoe"
+    className="relative w-full max-w-4xl lg:max-w-5xl rounded-3xl object-contain drop-shadow-2xl"
     animate={{ y: [0, -12, 0] }}
     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
   />
+
 
                 {
     /* Energy spark badge */
