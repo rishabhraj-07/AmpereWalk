@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { Menu, X, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
@@ -33,6 +33,8 @@ function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const isAuthed = window.localStorage.getItem("amperewalk:session") === "active";
   const { scrollY } = useScroll();
   const scrollProgressWidth = useTransform(scrollY, [0, 1e3], ["0%", "100%"]);
   useEffect(() => {
@@ -58,6 +60,10 @@ function Layout() {
     initial: { opacity: 0, y: 16, filter: "blur(4px)" },
     enter: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
     exit: { opacity: 0, y: -16, filter: "blur(4px)", transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } }
+  };
+  const handleLogout = () => {
+    window.localStorage.removeItem("amperewalk:session");
+    navigate("/login", { replace: true });
   };
   return <div className="min-h-screen flex flex-col">
 
@@ -111,9 +117,9 @@ function Layout() {
     /* CTA Buttons */
   }
             <div className="hidden md:flex items-center gap-3">
-              <Link to="/login" className="inline-flex min-w-20 items-center justify-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/85 transition-colors hover:border-aw-green/60 hover:bg-white/10 hover:text-white">
-                Login
-              </Link>
+              {!isAuthed && <Link to="/login" className="inline-flex min-w-20 items-center justify-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/85 transition-colors hover:border-aw-green/60 hover:bg-white/10 hover:text-white">
+                  Login
+                </Link>}
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link
     to="/dashboard"
@@ -122,6 +128,13 @@ function Layout() {
                   Dashboard
                 </Link>
               </motion.div>
+              {isAuthed && <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex min-w-20 items-center justify-center rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/85 transition-colors hover:border-red-400/60 hover:bg-white/10 hover:text-white"
+                >
+                  Logout
+                </button>}
             </div>
 
             {
@@ -175,16 +188,25 @@ function Layout() {
                     </Link>
                   </motion.div>)}
                 <div className="border-t border-white/10 my-2" />
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-                  <Link to="/login" className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                    Login
-                  </Link>
-                </motion.div>
+                {!isAuthed && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+                    <Link to="/login" className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                      Login
+                    </Link>
+                  </motion.div>}
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
                   <Link to="/dashboard" className="block px-4 py-3 bg-aw-green text-white rounded-lg hover:bg-aw-lime transition-colors text-center font-semibold">
                     Dashboard
                   </Link>
                 </motion.div>
+                {isAuthed && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+                    <button
+    type="button"
+    onClick={handleLogout}
+    className="block w-full px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
+  >
+                      Logout
+                    </button>
+                  </motion.div>}
               </nav>
             </motion.div>}
         </AnimatePresence>

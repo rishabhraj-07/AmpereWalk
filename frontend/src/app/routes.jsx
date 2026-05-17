@@ -9,6 +9,7 @@ const Blog = lazy(() => import("./pages/Blog").then((module) => ({ default: modu
 const Contact = lazy(() => import("./pages/Contact").then((module) => ({ default: module.Contact })));
 const Careers = lazy(() => import("./pages/Careers").then((module) => ({ default: module.Careers })));
 const Login = lazy(() => import("./pages/Login").then((module) => ({ default: module.Login })));
+const Signup = lazy(() => import("./pages/Signup").then((module) => ({ default: module.Signup })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((module) => ({ default: module.Dashboard })));
 
 function PageLoader({ children }) {
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: "contact", element: <PageLoader><Contact /></PageLoader> },
       { path: "careers", element: <PageLoader><Careers /></PageLoader> },
       { path: "login", element: <PageLoader><Login /></PageLoader> },
+      { path: "signup", element: <PageLoader><Signup /></PageLoader> },
       {
         path: "dashboard",
         element: <ProtectedRoute><PageLoader><Dashboard /></PageLoader></ProtectedRoute>
@@ -51,6 +53,7 @@ const router = createBrowserRouter([
     ]
   }
 ]);
+
 export {
   router
 };
