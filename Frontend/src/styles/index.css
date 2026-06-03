@@ -1,0 +1,161 @@
+@import './tailwind.css';
+@import './theme.css';
+
+
+/* ── Smooth scrolling ─────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Tilt card shine layer ───────────────────────────────── */
+.tilt-shine {
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+/* ── Text balance ─────────────────────────────────────────── */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ── Custom scrollbar (navy theme) ───────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D1B4B; }
+::-webkit-scrollbar-thumb { background: #4CAF50; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8DC63F; }
+
+/* ── Page transition (applied via framer motion) ─────────── */
+/* The AnimatePresence in Layout handles this — no CSS needed */
+
+/* ── Animated gradient text ──────────────────────────────── */
+.gradient-text-animated {
+  background: linear-gradient(135deg, #4CAF50, #00BCD4, #8DC63F);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientPan 4s ease infinite;
+}
+
+@keyframes gradientPan {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ── Shimmer loading skeleton ─────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ── Energy pulse ring ───────────────────────────────────── */
+@keyframes energyPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); }
+  70%  { box-shadow: 0 0 0 16px rgba(76,175,80,0); }
+  100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
+}
+
+.energy-pulse {
+  animation: energyPulse 2s cubic-bezier(0.66, 0, 0, 1) infinite;
+}
+
+/* ── Float animation ─────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ── Particle canvas ─────────────────────────────────────── */
+canvas.particle-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ── 3D perspective wrapper ──────────────────────────────── */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+
+  .aw-cursor-dot,
+  .aw-cursor-halo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+    contain: layout style paint;
+  }
+
+  .aw-cursor-dot.is-visible,
+  .aw-cursor-halo.is-visible {
+    opacity: 1;
+  }
+
+  .aw-cursor-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #8DC63F;
+    box-shadow: 0 0 16px rgba(141, 198, 63, 0.72);
+    transition: width 0.16s ease, height 0.16s ease, opacity 0.18s ease;
+  }
+
+  .aw-cursor-dot.is-interactive {
+    width: 6px;
+    height: 6px;
+  }
+
+  .aw-cursor-halo {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.14), transparent 60%);
+    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+  }
+
+  .aw-cursor-halo.is-interactive {
+    width: 56px;
+    height: 56px;
+    border-color: rgba(141, 198, 63, 0.72);
+  }
+}
+
+::selection {
+  color: #ffffff;
+  background: #4CAF50;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 80px rgba(13, 27, 75, 0.18);
+  backdrop-filter: blur(18px);
+}
